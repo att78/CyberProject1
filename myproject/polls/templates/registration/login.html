@@ -1,0 +1,17 @@
+<!--polls/templates/registration/login.html-->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Login</h2>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Login">
+</form>
+
+<a href="{% url 'polls:dashboard' %}">Back to dashboard</a>
+<a href="{% url 'polls:register' %}">Register</a>
+
+{% endblock %}

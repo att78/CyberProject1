@@ -1,10 +1,13 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 # Create your views here.
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.urls import reverse
-from .models import Choice, Question
+from .models import Choice, Question, Answer
 from .forms import CustomUserCreationForm
 from django.template import loader
+from django.contrib.auth.decorators import login_required
+
+
 
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
@@ -24,6 +27,16 @@ def vote(request, question_id):
         # user hits the Back button.
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
 
+@login_required(login_url='/accounts/login/')
+def answer(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    answer_text = request.POST['answer_text']
+    answer = Answer(question = question, answer_text = answer_text)
+    answer.save()
+    return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+
+
+@login_required(login_url='/accounts/login/')
 def index(request):
     latest_question_list = Question.objects.order_by('-pub_date')[:5]
     template = loader.get_template('polls/index.html')
@@ -33,18 +46,22 @@ def index(request):
     return HttpResponse(template.render(context, request))
 
 
+@login_required(login_url='/accounts/login/')
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     return render(request, 'polls/detail.html', {'question': question})
 
+@login_required(login_url='/accounts/login/')
 def results(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     return render(request, 'polls/results.html', {'question': question})
 
 
+#useria varten
 def dashboard(request):
     return render(request, "users/dashboard.html")
 
+#useria varten
 def register(request):
   if request.method == "GET":
       return render(
@@ -55,5 +72,9 @@ def register(request):
       form = CustomUserCreationForm(request.POST)
       if form.is_valid():
           user = form.save()
-          login(request, user)
-          return redirect(reverse("dashboard"))   
+          return redirect(reverse("login")) 
+      
+      return render(
+          request, "users/register.html",
+          {"form": form}
+      )

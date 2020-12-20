@@ -5,7 +5,7 @@
 {% if user_list %}
 <ul>
   {% for user in user_list %}
-  <li>{{ user.username }}</li>
+  <li>account:{{ user.username }} email: {{ user.email }}</li>
   {% endfor %}
 </ul>
 {% else %}

@@ -17,5 +17,6 @@ urlpatterns = [
     # ex: /polls/5/vote/
     path('<int:question_id>/vote/', views.vote, name='vote'),
     path('<int:question_id>/answer/', views.answer, name='answer'),
-
+    #userlistaus
+    path('users', views.user_list, name = "user_list"),
 ]

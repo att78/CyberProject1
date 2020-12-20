@@ -1,0 +1,13 @@
+<a href="{% url 'dashboard' %}">Back to dashboard</a>
+
+<h2>List of users</h2>
+
+{% if user_list %}
+<ul>
+  {% for user in user_list %}
+  <li>{{ user.username }}</li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No users are registered.</p>
+{% endif %}

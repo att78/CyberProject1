@@ -6,7 +6,7 @@ from .models import Choice, Question, Answer
 from .forms import CustomUserCreationForm
 from django.template import loader
 from django.contrib.auth.decorators import login_required
-
+from django.contrib.auth.models import User
 
 
 def vote(request, question_id):
@@ -78,3 +78,13 @@ def register(request):
           request, "users/register.html",
           {"form": form}
       )
+
+# userien listaus
+
+def user_list(request):
+  user_list = User.objects.all()
+  template = loader.get_template('users/userlist.html')
+  context = {
+    'user_list': user_list,
+    }
+  return HttpResponse(template.render(context, request))

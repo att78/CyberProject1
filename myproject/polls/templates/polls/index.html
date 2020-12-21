@@ -1,13 +1,19 @@
 <a href="{% url 'dashboard' %}">Back to dashboard</a>
 
-{% if latest_question_list %}
+<form action="{% url 'polls:index' %}" method="post">
+  {% csrf_token %}
+  <div>Search polls</div>
+  <input type="text" name="param" />
+
+  <input type="submit" value="Search">
+</form>
+
+{% if question_list %}
 <ul>
-  {% for question in latest_question_list %}
+  {% for question in question_list %}
   <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
   {% endfor %}
 </ul>
 {% else %}
 <p>No polls are available.</p>
 {% endif %}
-
-Note

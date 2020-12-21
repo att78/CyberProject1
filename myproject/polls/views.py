@@ -38,10 +38,19 @@ def answer(request, question_id):
 
 @login_required(login_url='/accounts/login/')
 def index(request):
+  if request.method == "GET":
     latest_question_list = Question.objects.order_by('-pub_date')[:5]
     template = loader.get_template('polls/index.html')
     context = {
-        'latest_question_list': latest_question_list,
+        'question_list': latest_question_list,
+    }
+    return HttpResponse(template.render(context, request))
+  elif request.method == "POST":
+    queryParam = request.POST.get("param", "")
+    question_list = Question.objects.raw("select id, question_text from polls_question where question_text like '%" + queryParam + "%'")
+    template = loader.get_template('polls/index.html')
+    context = {
+        'question_list': question_list,
     }
     return HttpResponse(template.render(context, request))
 
@@ -88,3 +97,4 @@ def user_list(request):
     'user_list': user_list,
     }
   return HttpResponse(template.render(context, request))
+
